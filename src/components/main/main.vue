@@ -12,7 +12,7 @@
     <Layout>
       <Header class="header-con">
         <header-bar :collapsed="collapsed" @on-coll-change="handleCollapsedChange">
-          <user :message-unread-count="unreadCount" :user-avatar="userAvatar"/>
+          <user :message-unread-count="unreadCount" :user-avator="userAvator"/>
           <language v-if="$config.useI18n" @on-lang-change="setLocal" style="margin-right: 10px;" :lang="local"/>
           <error-store v-if="$config.plugin['error-store'] && $config.plugin['error-store'].showInHeader" :has-read="hasReadErrorPage" :count="errorCount"></error-store>
           <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
@@ -44,7 +44,7 @@ import Fullscreen from './components/fullscreen'
 import Language from './components/language'
 import ErrorStore from './components/error-store'
 import { mapMutations, mapActions, mapGetters } from 'vuex'
-import { getNewTagList, routeEqual } from '@/libs/util'
+import { getNewTagList, getNextRoute, routeEqual } from '@/libs/util'
 import routers from '@/router/routers'
 import minLogo from '@/assets/images/logo-min.jpg'
 import maxLogo from '@/assets/images/logo.jpg'
@@ -79,12 +79,11 @@ export default {
     tagRouter () {
       return this.$store.state.app.tagRouter
     },
-    userAvatar () {
-      return this.$store.state.user.avatarImgPath
+    userAvator () {
+      return this.$store.state.user.avatorImgPath
     },
     cacheList () {
-      const list = ['ParentView', ...this.tagNavList.length ? this.tagNavList.filter(item => !(item.meta && item.meta.notCache)).map(item => item.name) : []]
-      return list
+      return ['ParentView', ...this.tagNavList.length ? this.tagNavList.filter(item => !(item.meta && item.meta.notCache)).map(item => item.name) : []]
     },
     menuList () {
       return this.$store.getters.menuList
@@ -134,15 +133,15 @@ export default {
       this.collapsed = state
     },
     handleCloseTag (res, type, route) {
-      if (type !== 'others') {
-        if (type === 'all') {
-          this.turnToPage(this.$config.homeName)
-        } else {
-          if (routeEqual(this.$route, route)) {
-            this.closeTag(route)
-          }
+      if (type === 'all') {
+        this.turnToPage(this.$config.homeName)
+      } else if (routeEqual(this.$route, route)) {
+        if (type !== 'others') {
+          const nextRoute = getNextRoute(this.tagNavList, route)
+          this.$router.push(nextRoute)
         }
       }
+      this.closeTag(route)
       this.setTagNavList(res)
     },
     handleClick (item) {
@@ -167,9 +166,8 @@ export default {
      */
     this.setTagNavList()
     this.setHomeRoute(routers)
-    const { name, params, query, meta } = this.$route
     this.addTag({
-      route: { name, params, query, meta }
+      route: this.$store.state.app.homeRoute
     })
     this.setBreadCrumb(this.$route)
     // 设置初始语言
