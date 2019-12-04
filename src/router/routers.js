@@ -105,6 +105,15 @@ export default [
                 },
                 component: () => import('@/view/vip-page/list.vue')
             }, {
+                path: 'vip_info',
+                name: 'vip_info',
+                meta: {
+                    hideInMenu: true,
+                    icon: 'md-planet',
+                    title: '会员详情'
+                },
+                component: () => import('@/view/vip-page/info.vue')
+            }, {
                 path: 'vip_dynamic',
                 name: 'vip_dynamic',
                 meta: {
