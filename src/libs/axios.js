@@ -24,6 +24,10 @@ class HttpRequest {
         //
       }
     }
+    // 加一个url判断，非login页面，就从user.token中取token，保存到headers['Authorization']
+    if (this.baseUrl !== 'login') {
+      config.headers['Authorization'] = store.state.user.token
+    }
     return config
   }
   destroy (url) {
@@ -65,8 +69,11 @@ class HttpRequest {
     })
   }
   request (options) {
+    console.log(options)
     const instance = axios.create()
-    options = Object.assign(this.getInsideConfig(), options)
+    // options = Object.assign(this.getInsideConfig(), options)
+    // 添加 options.url
+    options = Object.assign(this.getInsideConfig(options.url), options)
     this.interceptors(instance, options.url)
     return instance(options)
   }
