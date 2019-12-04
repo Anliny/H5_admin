@@ -8,9 +8,10 @@ export default {
     matchmaker_list: '红娘列表',
     matchmaker_info: '红娘详情',
     matchmaker_add: '添加红娘',
-
+    activity: '活动管理',
+    activity_list: '活动列表',
+    activity_add: '添加活动',
     tools_methods_page: '工具函数',
     drag_list_page: '拖拽列表',
-    i18n_page: '多语言',
-
+    i18n_page: '多语言'
 }

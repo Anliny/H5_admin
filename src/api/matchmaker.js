@@ -8,3 +8,12 @@ export const apiMatchmaker = (params) => {
         params: params
     })
 }
+
+// 会员详情
+export const apiMatchmakerInfo = (params) => {
+    return axios.request({
+        url: 'matchmaker/queryById',
+        method: 'get',
+        params: params
+    })
+}

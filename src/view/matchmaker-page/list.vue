@@ -26,6 +26,11 @@
                     <span v-if="row.gender == 1">男</span>
                     <span v-else>女</span>
                 </template>
+                <template slot-scope="{ row, index }" slot="_state_">
+                    <Tag v-if="row.state == 1" color="primary">审核中</Tag>
+                    <Tag v-if="row.state == 2" color="success">通过</Tag>
+                    <Tag v-if="row.state == 3" color="error">未通过</Tag>
+                </template>
                 <template slot-scope="{ row, index }" slot="action">
                     <Button size="small" @click="handleShow(row)">查看详情</Button>
                 </template>
@@ -62,24 +67,25 @@ export default {
                     slot: '_gender_'
                 },
                 {
-                    title: '会员号',
-                    key: 'memberId'
+                    title: '年龄',
+                    key: 'age'
                 },
                 {
-                    title: '电话',
+                    title: '工作年限',
+                    key: 'workingLife'
+                },
+                {
+                    title: '手机号',
                     key: 'phone'
                 },
+
                 {
-                    title: '推荐人',
-                    key: 'address'
+                    title: '微信号',
+                    key: 'wechatNumber'
                 },
                 {
-                    title: '我的推荐',
-                    key: 'address'
-                },
-                {
-                    title: '角色',
-                    key: 'grade'
+                    title: '状态',
+                    slot: '_state_'
                 },
                 {
                     title: '操作',
@@ -102,50 +108,26 @@ export default {
                 this.queryData.pages = pages
                 this.queryData.size = size
                 this.queryData.total = total
-                // this.data = records
+                this.data = records
             })
         },
         // 搜索查询
         handleSearch() {
             this.queryData.current = 1
-            this.getVipList()
+            this.getMatchmakerList()
         },
         // 点击分页
         handleChagePage(index) {
             this.queryData.current = index
-            this.getVipList()
+            this.getMatchmakerList()
         },
         // 查看会员详情
         handleShow(data) {
-            this.$router.push({ path: 'vip_info', query: { id: data.id } })
+            this.$router.push({ path: 'matchmaker_info', query: { id: data.id } })
         }
     }
 }
 </script>
 <style lang='css' >
-/* .content {
-    padding: 10px;
-} */
-.search,
-.main {
-    background-color: #fff;
-    padding: 10px;
-}
-.main {
-    margin-top: 10px;
-}
-.formItem .ivu-form-item {
-    margin: 0;
-}
-.pages {
-    padding: 10px;
-    float: right;
-}
-
-.clearfix:after {
-    content: ' ';
-    display: block;
-    clear: both;
-    visibility: hidden;
-}
+@import '../page.scss';
 </style>

@@ -8,6 +8,9 @@ export default {
     matchmaker_list: 'Matchmaker_list',
     matchmaker_info: 'Matchmaker_info',
     matchmaker_add: 'Matchmaker_add',
+    activity: 'Activity',
+    activity_list: 'Activity_list',
+    activity_add: 'Activity_add',
 
     i18n_page: 'Internationalization',
     'i18n-tip': 'Note: Only this page is multi-language, other pages do not add language content to the multi-language package.',
