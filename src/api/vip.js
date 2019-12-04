@@ -1,5 +1,6 @@
 import axios from '@/libs/api.request'
 
+// 会员列表
 export const apiVipList = (params) => {
     return axios.request({
         url: 'common/member/queryPage',
@@ -7,10 +8,11 @@ export const apiVipList = (params) => {
         params: params
     })
 }
-
-export const getUnreadCount = () => {
+// 会员详情
+export const apiVipInfo = (params) => {
     return axios.request({
-        url: 'message/count',
+        url: 'member/queryById',
+        params: params,
         method: 'get'
     })
 }

@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { apiVipList } from '@/api/vip.js'
+import { apiMatchmaker } from '@/api/matchmaker.js'
 export default {
     components: {},
     data() {
@@ -62,20 +62,24 @@ export default {
                     slot: '_gender_'
                 },
                 {
-                    title: '年龄',
+                    title: '会员号',
                     key: 'memberId'
                 },
                 {
-                    title: '工作年限',
+                    title: '电话',
                     key: 'phone'
                 },
                 {
-                    title: '手机号',
+                    title: '推荐人',
                     key: 'address'
                 },
                 {
-                    title: '微信号',
+                    title: '我的推荐',
                     key: 'address'
+                },
+                {
+                    title: '角色',
+                    key: 'grade'
                 },
                 {
                     title: '操作',
@@ -86,18 +90,19 @@ export default {
         }
     },
     created() {
-        this.getVipList()
+        this.getMatchmakerList()
     },
     methods: {
         // 获取列表
-        getVipList() {
-            apiVipList(this.queryData).then(res => {
+        getMatchmakerList() {
+            apiMatchmaker(this.queryData).then(res => {
+                console.log(res)
                 let { current, pages, records, size, total } = res.data.data
                 this.queryData.current = current
                 this.queryData.pages = pages
                 this.queryData.size = size
                 this.queryData.total = total
-                this.data = records
+                // this.data = records
             })
         },
         // 搜索查询

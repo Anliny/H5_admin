@@ -112,6 +112,9 @@ export default [
                     icon: 'md-planet',
                     title: '会员详情'
                 },
+                props: (route) => ({
+                    id: route.query.id
+                }),
                 component: () => import('@/view/vip-page/info.vue')
             }, {
                 path: 'vip_dynamic',
@@ -121,6 +124,46 @@ export default [
                     title: '会员动态'
                 },
                 component: () => import('@/view/vip-page/dynamic.vue')
+            }
+        ]
+    },
+    {
+        path: '/matchmaker',
+        name: 'matchmaker',
+        meta: {
+            icon: 'logo-buffer',
+            title: '红娘管理'
+        },
+        component: Main,
+        children: [
+            {
+                path: 'matchmaker_list',
+                name: 'matchmaker_list',
+                meta: {
+                    icon: 'md-planet',
+                    title: '红娘列表'
+                },
+                component: () => import('@/view/matchmaker-page/list.vue')
+            }, {
+                path: 'matchmaker_info',
+                name: 'matchmaker_info',
+                meta: {
+                    hideInMenu: true,
+                    icon: 'md-planet',
+                    title: '红娘详情'
+                },
+                props: (route) => ({
+                    id: route.query.id
+                }),
+                component: () => import('@/view/matchmaker-page/info.vue')
+            }, {
+                path: 'matchmaker_add',
+                name: 'matchmaker_add',
+                meta: {
+                    icon: 'md-planet',
+                    title: '添加红娘'
+                },
+                component: () => import('@/view/matchmaker-page/add.vue')
             }
         ]
     },
