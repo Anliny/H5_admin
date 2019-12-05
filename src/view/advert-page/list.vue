@@ -4,77 +4,38 @@
         <div class="search">
             <Form :model="queryData" :label-width="100">
                 <Row :gutter="16">
-                    <Col span="5" class="formItem">
-                        <FormItem label="发布人">
-                            <Input clearable v-model="queryData.name" placeholder="请输入发布人姓名"></Input>
+                    <Col span="6" class="formItem">
+                        <FormItem label="广告位置">
+                            <Select v-model="queryData.type" clearable>
+                                <Option
+                                    v-for="item in selectList"
+                                    :value="item.value"
+                                    :key="item.value"
+                                >{{ item.label }}</Option>
+                            </Select>
                         </FormItem>
                     </Col>
-                    <Col span="5" class="formItem">
-                        <FormItem label="关键字">
-                            <Input clearable v-model="queryData.phone" placeholder="请输入关键字"></Input>
+                    <Col span="6" class="formItem">
+                        <FormItem label="地区">
+                            <Input clearable v-model="queryData.phone" placeholder="请输入电话号码"></Input>
                         </FormItem>
                     </Col>
-                    <Col span="5" class="formItem">
-                        <FormItem label="开始日期">
-                            <Input clearable v-model="queryData.phone" placeholder="请输选择开始日期"></Input>
-                        </FormItem>
-                    </Col>
-                    <Col span="5" class="formItem">
-                        <FormItem label="结束日期">
-                            <Input clearable v-model="queryData.phone" placeholder="请选择结束日期"></Input>
-                        </FormItem>
-                    </Col>
-                    <Col span="4" class="formItem">
-                        <Button type="primary" @click="handleSearch">添加活动</Button>&nbsp;
+                    <Col span="6" class="formItem">
                         <Button type="primary" @click="handleSearch">搜索</Button>
                     </Col>
                 </Row>
             </Form>
         </div>
         <div class="main clearfix">
-            <div class="listItem" v-for="(item,index) in data" :key="index">
-                <div class="header">
-                    <div class="header-image">
-                        <img :src="userAvatar(item.userAvatar)" alt srcset>
-                    </div>
-                    <div class="title">
-                        <h3>
-                            {{item.name}}
-                            <Tag v-if="item.state == 1" color="primary">审核中···</Tag>
-                            <Tag v-if="item.state == 2" color="success">审核通过</Tag>
-                        </h3>
-                        <span>{{item.rawAddTime}}</span>
-                    </div>
-                    <div class="btnWraper">
-                        <Button
-                            type="primary"
-                            v-if="item.state==1"
-                            icon="ios-happy"
-                            size="small"
-                            ghost
-                        >确认通过</Button>&nbsp;
-                        <Button type="error" icon="ios-trash-outline" size="small" ghost>删除动态</Button>
-                    </div>
-                </div>
-
-                <div class="text">{{item.content}}</div>
-                <div class="photo">
-                    <img
-                        v-for="(imageItem,i) in pictureUrl(item.pictureUrl)"
-                        :key="i"
-                        class="photo-img"
-                        :src="imageItem"
-                        alt
-                        srcset
-                    >
-                </div>
-                <div class="time">活动日期：{{item.startTime}} 到 {{item.endTime}}</div>
-                <div class="time">报名截止日期：{{item.startTime}}</div>
-                <Alert class="alert" banner type="warning">
-                    本次活动报名人数：{{item.activityNumber}}人，已经有
-                    <span class="span">{{item.partakes}}</span>人参加！
-                </Alert>
-            </div>
+            <Table stripe :columns="columns" :data="data">
+                <template slot-scope="{ row, index }" slot="_gender_">
+                    <span v-if="row.gender == 1">男</span>
+                    <span v-else>女</span>
+                </template>
+                <template slot-scope="{ row, index }" slot="action">
+                    <Button size="small" @click="handleShow(row)">查看详情</Button>
+                </template>
+            </Table>
             <div class="pages">
                 <Page
                     :total="queryData.total"
@@ -87,62 +48,101 @@
 </template>
 
 <script>
-import { apiActivityList } from '@/api/activity.js'
+import { apiAdvertList } from '@/api/advert.js'
 export default {
     components: {},
     data() {
         return {
+            selectList: [
+                {
+                    value: 0,
+                    label: '头部'
+                },
+                {
+                    value: 1,
+                    label: '列表'
+                }
+            ],
             queryData: {
-                addressId: '',
-                title: ''
+                type: '',
+                region: ''
             },
+            columns: [
+                {
+                    title: '缩略图',
+
+                    slot: 'pictureUrl'
+                },
+                {
+                    title: '广告名称',
+                    key: 'name'
+                },
+
+                {
+                    title: '投放地区',
+                    key: 'region'
+                },
+                {
+                    title: '开始日期',
+                    key: 'startTime'
+                },
+                {
+                    title: '结束日期',
+                    key: 'endTime'
+                },
+                {
+                    title: '广告链接',
+                    key: 'url'
+                },
+                {
+                    title: '广告位置',
+                    key: 'type'
+                },
+                {
+                    title: '状态',
+                    slot: 'action'
+                },
+                {
+                    title: '操作',
+                    slot: 'action'
+                }
+            ],
             data: []
         }
     },
-    computed: {},
     created() {
-        this.getActivityList()
+        this.getAdvertList()
     },
     methods: {
         // 获取列表
-        getActivityList() {
-            apiActivityList(this.queryData).then(res => {
+        getAdvertList() {
+            apiAdvertList(this.queryData).then(res => {
                 console.log(res)
-                let { current, pages, records, size, total } = res.data.data
-                this.queryData.current = current
-                this.queryData.pages = pages
-                this.queryData.size = size
-                this.queryData.total = total
-                this.data = records
+                // let { current, pages, records, size, total } = res.data.data
+                // this.queryData.current = current
+                // this.queryData.pages = pages
+                // this.queryData.size = size
+                // this.queryData.total = total
+                // this.data = records
             })
         },
         // 搜索查询
         handleSearch() {
             this.queryData.current = 1
-            this.getMatchmakerList()
+            this.getVipList()
         },
         // 点击分页
         handleChagePage(index) {
             this.queryData.current = index
-            this.getMatchmakerList()
+            this.getVipList()
         },
-        // 列表头像处理
-        userAvatar(url) {
-            if (url) return url
-            return 'https://gss0.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/wh%3D600%2C800/sign=62d3ca5e6ed9f2d320442ce999dca62b/34fae6cd7b899e511694cfab4ea7d933c8950d72.jpg'
-        },
-        // 格式化图片
-        pictureUrl(imgList) {
-            console.log(imgList)
-            if (imgList.indexOf('[') != -1) {
-                return JSON.parse(imgList)
-            } else {
-                return [imgList]
-            }
+        // 查看会员详情
+        handleShow(data) {
+            this.$router.push({ path: 'vip_info', query: { id: data.id } })
         }
     }
 }
 </script>
-<style lang='scss' >
+<style lang="scss" scoped>
 @import '../page.scss';
 </style>

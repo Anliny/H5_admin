@@ -72,6 +72,7 @@ class HttpRequest {
         const instance = axios.create()
         // options = Object.assign(this.getInsideConfig(), options)
         // 添加 options.url
+        console.log(options)
         options = Object.assign(this.getInsideConfig(options.url), options)
         this.interceptors(instance, options.url)
         return instance(options)
