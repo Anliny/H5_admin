@@ -171,7 +171,7 @@ export default [
         path: '/activity',
         name: 'activity',
         meta: {
-            icon: 'md-bonfire',
+            icon: 'ios-aperture',
             title: '活动管理'
         },
         component: Main,
@@ -180,7 +180,7 @@ export default [
                 path: 'activity_list',
                 name: 'activity_list',
                 meta: {
-                    icon: 'md-bonfire',
+                    icon: 'ios-aperture',
                     title: '活动列表'
                 },
                 component: () => import('@/view/activity-page/list.vue')
@@ -188,14 +188,41 @@ export default [
                 path: 'activity_add',
                 name: 'activity_add',
                 meta: {
-                    icon: 'md-bonfire',
+                    icon: 'ios-aperture',
                     title: '添加活动'
                 },
                 component: () => import('@/view/activity-page/add.vue')
             }
         ]
     },
-
+    {
+        path: '/advert',
+        name: 'advert',
+        meta: {
+            icon: 'logo-youtube',
+            title: '广告管理'
+        },
+        component: Main,
+        children: [
+            {
+                path: 'advert_list',
+                name: 'advert_list',
+                meta: {
+                    icon: 'logo-youtube',
+                    title: '广告列表'
+                },
+                component: () => import('@/view/advert-page/list.vue')
+            }, {
+                path: 'advert_add',
+                name: 'advert_add',
+                meta: {
+                    icon: 'logo-youtube',
+                    title: '添加广告'
+                },
+                component: () => import('@/view/advert-page/add.vue')
+            }
+        ]
+    },
     {
         path: '/error_logger',
         name: 'error_logger',

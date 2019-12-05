@@ -44,12 +44,12 @@ module.exports = {
     //   }
     devServer: {
         proxy: {
-            '/': {
+            '/api': {
                 target: 'http://106.13.70.95:888',
                 changeOrigin: true,
                 ws: false,
                 pathRewrite: {
-                    '^/': ''
+                    '^/api': '/'
                 }
             }
         }

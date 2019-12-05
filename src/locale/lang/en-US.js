@@ -11,7 +11,9 @@ export default {
     activity: 'Activity',
     activity_list: 'Activity_list',
     activity_add: 'Activity_add',
-
+    advert: 'Advert',
+    advert_list: 'Advert_list',
+    advert_add: 'Advert_add',
     i18n_page: 'Internationalization',
     'i18n-tip': 'Note: Only this page is multi-language, other pages do not add language content to the multi-language package.',
     error_store_page: 'Error Collection',

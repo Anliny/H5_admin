@@ -110,11 +110,11 @@ export default {
             return new Promise((resolve, reject) => {
                 try {
                     getUserInfo(state.token).then(res => {
-                        const data = res.data
-                        commit('setAvator', data.avator)
+                        const data = res.data.data
+                        commit('setAvator', data.userAvatar)
                         commit('setUserName', data.name)
                         commit('setUserId', data.user_id)
-                        commit('setAccess', data.access)
+                        commit('setAccess', data.state)
                         commit('setHasGetInfo', true)
                         resolve(data)
                     }).catch(err => {

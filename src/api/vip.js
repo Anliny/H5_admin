@@ -3,7 +3,7 @@ import axios from '@/libs/api.request'
 // 会员列表
 export const apiVipList = (params) => {
     return axios.request({
-        url: 'common/member/queryPage',
+        url: 'api/common/member/queryPage',
         method: 'get',
         params: params
     })
@@ -11,7 +11,7 @@ export const apiVipList = (params) => {
 // 会员详情
 export const apiVipInfo = (params) => {
     return axios.request({
-        url: 'member/queryById',
+        url: 'api/member/queryById',
         params: params,
         method: 'get'
     })
