@@ -45,14 +45,47 @@
                         </FormItem>
                     </div>
                 </Col>
-                <Col span="12"></Col>
+                <Col span="12">
+                    <div>
+                        <FormItem label="广告名称:" prop="name">
+                            <Input v-model="formValidate.name" placeholder="请输入广告名称"/>
+                        </FormItem>
+                    </div>
+                    <div>
+                        <FormItem label="开始时间:" prop="startTime">
+                            <DatePicker
+                                v-model="formValidate.startTime"
+                                type="date"
+                                placeholder="请选择开始时间"
+                            ></DatePicker>
+                        </FormItem>
+                    </div>
+                    <div>
+                        <FormItem label="结束时间:" prop="endTime">
+                            <DatePicker
+                                v-model="formValidate.endTime"
+                                type="date"
+                                placeholder="请选择结束时间"
+                            ></DatePicker>
+                        </FormItem>
+                    </div>
+                    <div>
+                        <FormItem label="广告链接:" prop="url">
+                            <Input v-model="formValidate.url" placeholder="请输入广告名称"/>
+                        </FormItem>
+                    </div>
+                </Col>
             </Row>
+            <FormItem>
+                <Button type="primary" @click="handleSubmit('formValidate')">Submit</Button>
+                <Button @click="handleReset('formValidate')" style="margin-left: 8px">Reset</Button>
+            </FormItem>
         </Form>
     </div>
 </template>
 
 <script>
-import config from '@/config'
+import { apiAdvertAdd } from '@/api/advert.js'
 export default {
     components: {},
     data() {
@@ -77,15 +110,45 @@ export default {
             },
             ruleValidate: {
                 type: [{ required: true, message: '请选择广告位置', trigger: 'change' }],
+                startTime: [{ required: true, type: 'date', message: '请选择开始日期', trigger: 'change' }],
+                endTime: [{ required: true, type: 'date', message: '请选择结束日期', trigger: 'change' }],
+                name: [{ required: true, message: '请填写广告名称', trigger: 'blur' }],
+                url: [{ required: true, message: '请填写外部链接', trigger: 'blur' }],
                 pictureUrl: [{ validator: validatePassCheck, required: true, trigger: 'change' }]
             }
         }
     },
-    mounted() {
-        console.log(process.env.BASE_URL)
-    },
     computed: {},
     methods: {
+        // 保存
+        handleSubmit(name) {
+            console.log(this.formValidate.startTime.toLocaleString().split(' ')[0])
+            this.$refs[name].validate(valid => {
+                if (valid) {
+                    let { type, name, region, pictureUrl, startTime, endTime, url } = this.formValidate
+                    let data = {
+                        type,
+                        name,
+                        region,
+                        pictureUrl,
+                        startTime: startTime.toLocaleString().split(' ')[0],
+                        endTime: endTime.toLocaleString().split(' ')[0],
+                        url
+                    }
+
+                    apiAdvertAdd(data).then(res => {
+                        console.log(res)
+                    })
+                } else {
+                    this.$Message.error('Fail!')
+                }
+            })
+        },
+        // 取消
+        handleReset(name) {
+            this.$refs[name].resetFields()
+        },
+        // 图片上传
         handleSuccess(res, file) {
             this.formValidate.pictureUrl = res.data
         },

@@ -86,7 +86,6 @@ export default {
         getUserInfo() {
             if (!this.id) return
             apiMatchmakerInfo({ id: this.id }).then(res => {
-                console.log(res)
                 this.matchmakerInfo = res.data.data
             })
         }

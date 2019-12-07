@@ -148,14 +148,12 @@ export default {
         }
     },
     mounted() {
-        console.log(this.id)
         this.getUserInfo()
     },
     methods: {
         getUserInfo() {
             if (!this.id) return
             apiVipInfo({ id: this.id }).then(res => {
-                console.log(res)
                 this.vipInfo = res.data.data
             })
         }

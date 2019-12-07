@@ -9,10 +9,10 @@ export const apiAdvertList = (params) => {
     })
 }
 // 会员详情
-export const apiVipInfo = (params) => {
+export const apiAdvertAdd = (data) => {
     return axios.request({
-        url: 'api/member/queryById',
-        params: params,
-        method: 'get'
+        url: 'api/advertisement/save',
+        data: data,
+        method: 'post'
     })
 }

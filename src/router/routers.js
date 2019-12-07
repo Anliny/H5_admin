@@ -132,7 +132,8 @@ export default [
         name: 'matchmaker',
         meta: {
             icon: 'ios-contacts',
-            title: '红娘管理'
+            title: '红娘管理',
+            access: ['super_admin'],
         },
         component: Main,
         children: [

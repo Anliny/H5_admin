@@ -117,7 +117,6 @@ export default {
         // 获取列表
         getAdvertList() {
             apiAdvertList(this.queryData).then(res => {
-                console.log(res)
                 // let { current, pages, records, size, total } = res.data.data
                 // this.queryData.current = current
                 // this.queryData.pages = pages
