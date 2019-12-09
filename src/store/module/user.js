@@ -6,9 +6,9 @@ import {
     getContentByMsgId,
     hasRead,
     removeReaded,
-    restoreTrash,
-    getUnreadCount
+    restoreTrash
 } from '@/api/user'
+// getUnreadCount
 import { setToken, getToken } from '@/libs/util'
 
 export default {
