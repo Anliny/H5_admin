@@ -147,6 +147,26 @@ export default [
                 component: () => import('@/view/member-page/list.vue')
             }
         ]
+    }, {
+        path: '/lable',
+        name: 'lable',
+        meta: {
+            icon: 'ios-contacts',
+            title: '标签管理',
+            access: ['super_admin'],
+        },
+        component: Main,
+        children: [
+            {
+                path: 'lable_list',
+                name: 'lable_list',
+                meta: {
+                    icon: 'ios-contacts',
+                    title: '标签列表'
+                },
+                component: () => import('@/view/lable-page/list.vue')
+            }
+        ]
     },
     {
         path: '/matchmaker',

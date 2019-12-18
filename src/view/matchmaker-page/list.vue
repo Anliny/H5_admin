@@ -32,14 +32,19 @@
                 </template>
                 <template slot-scope="{ row, index }" slot="_state_">
                     <Tag v-if="row.state == 1" color="primary">审核中···</Tag>
-                    <Tag v-if="row.state == 2" color="success">通过</Tag>
+                    <Tag v-if="row.state == 2" color="success">审核通过</Tag>
                     <Tag v-if="row.state == 3" color="error">未通过</Tag>
                 </template>
                 <template slot-scope="{ row, index }" slot="action">
-                    <Button size="small" @click="handleShow(row)">查看详情</Button>
-                    <Button size="small" v-if="row.type == 1" @click="handleShow(row)">设置为管理员</Button>
-                    <Button size="small" v-else @click="handleShow(row)">取消管理员</Button>
-                    <Button size="small" @click="handleShow(row)">删除</Button>
+                    <Button size="small" @click="handleShow(row)">查看详情</Button>&nbsp;
+                    <Button v-if="row.state != 2" size="small" @click="handleExamine(row)">确认审核</Button>&nbsp;
+                    <Button
+                        v-if="row.state != 3"
+                        type="error"
+                        size="small"
+                        @click="handleCancelExamine(row)"
+                    >取消通过</Button>&nbsp;
+                    <Button size="small" @click="handleDelete(row)">删除用户</Button>
                 </template>
             </Table>
             <div class="pages">
@@ -54,7 +59,7 @@
 </template>
 
 <script>
-import { apiMatchmaker } from '@/api/matchmaker.js'
+import { apiMatchmaker, apiMatchmakerSave } from '@/api/matchmaker.js'
 import { mapMutations, mapActions, mapGetters, mapState } from 'vuex'
 
 export default {
@@ -99,7 +104,8 @@ export default {
                 },
                 {
                     title: '状态',
-                    slot: '_state_'
+                    slot: '_state_',
+                    width: 120
                 },
                 {
                     title: '操作',
@@ -140,6 +146,32 @@ export default {
         // 查看会员详情
         handleShow(data) {
             this.$router.push({ path: 'matchmaker_info', query: { id: data.id } })
+        },
+        // 确认审核
+        handleExamine(data) {
+            let saveData = {
+                id: data.id,
+                state: 2
+            }
+            apiMatchmakerSave(saveData).then(res => {
+                try {
+                    this.$Message.success('修改成功！')
+                    this.getMatchmakerList()
+                } catch (e) {}
+            })
+        },
+        // 删除用户
+        handleDelete(data) {
+            let saveData = {
+                id: data.id,
+                deleted: true
+            }
+            apiMatchmakerSave(saveData).then(res => {
+                try {
+                    this.$Message.success('删除成功！')
+                    this.getMatchmakerList()
+                } catch (e) {}
+            })
         }
     }
 }

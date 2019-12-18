@@ -111,10 +111,10 @@ export default {
             return new Promise((resolve, reject) => {
                 try {
                     getUserInfo(state.token).then(res => {
+                        console.log(res.data.data)
                         const data = res.data.data
-
                         // 如果为 data.state = 1 为红娘，2 为管理员,  开发时设置为1
-                        let state = data.state == 1 ? ['super_admin'] : []
+                        let state = data.state == 2 ? ['super_admin'] : []
                         commit('setAvator', data.userAvatar)
                         commit('setUserName', data.name)
                         commit('setUserId', data.user_id)

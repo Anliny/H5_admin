@@ -62,6 +62,14 @@
                             v-model="formValidate.presentPrice"
                         ></InputNumber>
                     </FormItem>
+                    <FormItem label="会员等级顺序" prop="sequence">
+                        <InputNumber
+                            :min="0"
+                            :max="10000"
+                            style="width:200px"
+                            v-model="formValidate.sequence"
+                        ></InputNumber>
+                    </FormItem>
                     <FormItem label="说明" prop="illustrate">
                         <Input
                             v-model="formValidate.illustrate"
@@ -92,7 +100,8 @@ export default {
                 gradeName: '',
                 originalPrice: 0,
                 presentPrice: 0,
-                illustrate: ''
+                illustrate: '',
+                sequence: 0
             },
             ruleValidate: {},
             gradeModel: false,
@@ -160,18 +169,20 @@ export default {
                 gradeName: '',
                 originalPrice: 0,
                 presentPrice: 0,
-                illustrate: ''
+                illustrate: '',
+                sequence: 0
             }
             this.title = title ? '编辑' : '添加'
             this.gradeModel = true
             if (title) {
-                let { id, gradeName, illustrate, originalPrice, presentPrice } = data
+                let { id, gradeName, illustrate, originalPrice, presentPrice, sequence } = data
                 this.formValidate = {
                     id,
                     gradeName,
                     illustrate,
                     originalPrice: originalPrice ? Number(originalPrice) : 0,
-                    presentPrice: presentPrice ? Number(presentPrice) : 0
+                    presentPrice: presentPrice ? Number(presentPrice) : 0,
+                    sequence: sequence ? Number(sequence) : 0
                 }
             }
         },

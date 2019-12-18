@@ -17,3 +17,12 @@ export const apiMatchmakerInfo = (params) => {
         params: params
     })
 }
+
+// 保存红娘
+export const apiMatchmakerSave = (data) => {
+    return axios.request({
+        url: 'api/matchmaker/save',
+        method: 'post',
+        data: data
+    })
+}
