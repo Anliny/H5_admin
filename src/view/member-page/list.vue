@@ -17,7 +17,8 @@
         <div class="main clearfix">
             <Table type="expand" stripe :columns="columns" :data="data">
                 <template slot-scope="{ row, index }" slot="action">
-                    <Button size="small" @click="handleEdit(true,row)">编辑</Button>
+                    <Button size="small" @click="handleEdit(true,row)">编辑</Button>&nbsp;
+                    <Button size="small" @click="handleDelete(row)">删除</Button>
                 </template>
             </Table>
             <div class="pages">
@@ -28,7 +29,7 @@
                 />
             </div>
         </div>
-        <Modal v-model="gradeModel" :width="800" @on-ok="handelSave" @on-cancel="handelCancel">
+        <Modal v-model="gradeModel" :width="800">
             <div slot="header">
                 <h3>{{title}}会员等级</h3>
             </div>
@@ -79,6 +80,10 @@
                         ></Input>
                     </FormItem>
                 </Form>
+            </div>
+            <div slot="footer">
+                <Button @click="handelCancel">取消</Button>
+                <Button type="primary" @click="handelSave">保存</Button>
             </div>
         </Modal>
     </div>
@@ -202,6 +207,23 @@ export default {
         // 取消保存会员等级
         handelCancel(e) {
             console.log(e)
+        },
+        // 删除会员卡
+        handleDelete(row) {
+            let data = {
+                id: row.id,
+                deleted: true
+            }
+            apiSevaGrade(data).then(res => {
+                try {
+                    if (res.data.code == 0) {
+                        this.$Message.success('删除成功！')
+                        this.getVipList()
+                    } else {
+                        this.$Message.error(res.data.message)
+                    }
+                } catch (error) {}
+            })
         }
     }
 }
