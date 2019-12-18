@@ -75,15 +75,16 @@ export default {
     actions: {
         // 登录
         handleLogin ({ commit }, { userName, password }) {
-            userName = userName.trim()
+            userName = userName.trim()//去除头尾空格
             return new Promise((resolve, reject) => {
                 login({
                     userName,
                     password
                 }).then(res => {
                     const data = res.data
+                    console.log(data)
                     commit('setToken', data.data)
-                    resolve()
+                    resolve(data)
                 }).catch(err => {
                     reject(err)
                 })

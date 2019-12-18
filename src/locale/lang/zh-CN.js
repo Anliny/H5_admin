@@ -14,6 +14,8 @@ export default {
     advert: '广告管理',
     advert_list: '广告列表',
     advert_add: '添加广告',
+    member: '会员等级',
+    member_list: '会员等级列表',
     tools_methods_page: '工具函数',
     drag_list_page: '拖拽列表',
     i18n_page: '多语言'

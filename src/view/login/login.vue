@@ -26,9 +26,8 @@ export default {
         ...mapActions(['handleLogin', 'getUserInfo']),
         handleSubmit({ userName, password }) {
             this.handleLogin({ userName, password }).then(res => {
-                if (!res) {
-                    this.$Message.error('用户不存在')
-                    this.$router.replace('login')
+                if (res.code == '-1') {
+                    this.$Message.error(res.message)
                 } else {
                     this.getUserInfo().then(res => {
                         this.$router.push({

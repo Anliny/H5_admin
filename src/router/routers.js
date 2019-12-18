@@ -128,6 +128,27 @@ export default [
         ]
     },
     {
+        path: '/member',
+        name: 'member',
+        meta: {
+            icon: 'ios-contacts',
+            title: '会员卡管理',
+            access: ['super_admin'],
+        },
+        component: Main,
+        children: [
+            {
+                path: 'member_list',
+                name: 'member_list',
+                meta: {
+                    icon: 'ios-contacts',
+                    title: '会员等级列表'
+                },
+                component: () => import('@/view/member-page/list.vue')
+            }
+        ]
+    },
+    {
         path: '/matchmaker',
         name: 'matchmaker',
         meta: {

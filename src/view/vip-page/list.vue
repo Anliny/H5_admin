@@ -26,6 +26,14 @@
                     <span v-if="row.gender == 1">男</span>
                     <span v-else>女</span>
                 </template>
+                <template slot-scope="{ row, index }" slot="_education_">
+                    {{row.education}}
+                    <!-- <span v-if="row.grade == 1">普通会员</span>
+                    <span v-else-if="row.grade == 2">银卡会员</span>
+                    <span v-else-if="row.grade == 3">金卡会员</span>
+                    <span v-else-if="row.grade == 4">砖石会员</span>
+                    <span v-else="row.grade == 5">黑卡会员</span>-->
+                </template>
                 <template slot-scope="{ row, index }" slot="action">
                     <Button size="small" @click="handleShow(row)">查看详情</Button>
                 </template>
@@ -57,27 +65,34 @@ export default {
                     key: 'name'
                 },
                 {
+                    title: '会员号',
+                    key: 'memberId'
+                },
+                {
+                    title: '学历',
+                    key: 'education'
+                },
+                {
                     title: '性别',
 
                     slot: '_gender_'
                 },
                 {
-                    title: '年龄',
-                    key: 'memberId'
-                },
-                {
-                    title: '工作年限',
+                    title: '电话',
                     key: 'phone'
                 },
                 {
-                    title: '手机号',
-                    key: 'address'
+                    title: '推荐人',
+                    key: ''
                 },
                 {
-                    title: '微信号',
-                    key: 'address'
+                    title: '我的推荐',
+                    key: ''
                 },
-
+                {
+                    title: '角色',
+                    key: '_education_'
+                },
                 {
                     title: '操作',
                     slot: 'action'
