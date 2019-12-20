@@ -11,7 +11,7 @@ export const apiVipList = (params) => {
 // 会员详情
 export const apiVipInfo = (params) => {
     return axios.request({
-        url: 'api/member/queryById',
+        url: 'member/queryById',
         params: params,
         method: 'get'
     })

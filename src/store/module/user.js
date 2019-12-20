@@ -83,7 +83,9 @@ export default {
                 }).then(res => {
                     const data = res.data
                     console.log(data)
-                    commit('setToken', data.data)
+                    commit('setToken', data.data.token)
+                    let state = data.data.type == 3 ? ['super_admin', 'admin'] : []
+                    commit('setAccess', state)
                     resolve(data)
                 }).catch(err => {
                     reject(err)
@@ -118,7 +120,7 @@ export default {
                         commit('setAvator', data.userAvatar)
                         commit('setUserName', data.name)
                         commit('setUserId', data.user_id)
-                        commit('setAccess', state)
+                        // commit('setAccess', state)
                         commit('setHasGetInfo', true)
                         resolve(data)
                     }).catch(err => {

@@ -154,6 +154,7 @@ export default {
         getUserInfo() {
             if (!this.id) return
             apiVipInfo({ id: this.id }).then(res => {
+                console.log(res)
                 this.vipInfo = res.data.data
             })
         }

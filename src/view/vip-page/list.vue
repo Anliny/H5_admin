@@ -26,16 +26,16 @@
                     <span v-if="row.gender == 1">男</span>
                     <span v-else>女</span>
                 </template>
-                <template slot-scope="{ row, index }" slot="_education_">
-                    {{row.education}}
-                    <!-- <span v-if="row.grade == 1">普通会员</span>
-                    <span v-else-if="row.grade == 2">银卡会员</span>
-                    <span v-else-if="row.grade == 3">金卡会员</span>
-                    <span v-else-if="row.grade == 4">砖石会员</span>
-                    <span v-else="row.grade == 5">黑卡会员</span>-->
+                <template slot-scope="{ row, index }" slot="_grade_">
+                    <span v-if="row.grade == 1">普通会员</span>
+                    <span v-else-if="row.grade == 2">普通会员</span>
+                    <span v-else-if="row.grade == 3">普通会员</span>
+                    <span v-else-if="row.grade == 4">普通会员</span>
+                    <span v-else>女</span>
                 </template>
                 <template slot-scope="{ row, index }" slot="action">
-                    <Button size="small" @click="handleShow(row)">查看详情</Button>
+                    <Button size="small" @click="handleShow(row)">查看详情</Button>&nbsp;
+                    <Button size="small" @click="handleShow(row)">修改会员等级</Button>
                 </template>
             </Table>
             <div class="pages">
@@ -91,7 +91,7 @@ export default {
                 },
                 {
                     title: '角色',
-                    key: '_education_'
+                    slot: '_grade_'
                 },
                 {
                     title: '操作',
