@@ -28,14 +28,14 @@
                 </template>
                 <template slot-scope="{ row, index }" slot="_grade_">
                     <span v-if="row.grade == 1">普通会员</span>
-                    <span v-else-if="row.grade == 2">普通会员</span>
-                    <span v-else-if="row.grade == 3">普通会员</span>
-                    <span v-else-if="row.grade == 4">普通会员</span>
-                    <span v-else>女</span>
+                    <span v-else-if="row.grade == 2">银卡会员</span>
+                    <span v-else-if="row.grade == 3">金卡会员</span>
+                    <span v-else-if="row.grade == 4">钻石会员</span>
+                    <span v-else>黑卡会员</span>
                 </template>
                 <template slot-scope="{ row, index }" slot="action">
                     <Button size="small" @click="handleShow(row)">查看详情</Button>&nbsp;
-                    <Button size="small" @click="handleShow(row)">修改会员等级</Button>
+                    <Button size="small" @click="handleEdit(row)">修改会员等级</Button>
                 </template>
             </Table>
             <div class="pages">
@@ -46,11 +46,38 @@
                 />
             </div>
         </div>
+        <Modal v-model="vipModel" :width="800">
+            <div slot="header">
+                <h3>会员等级</h3>
+            </div>
+            <div>
+                <Form
+                    ref="formValidate"
+                    :model="formValidate"
+                    :rules="ruleValidate"
+                    :label-width="120"
+                >
+                    <FormItem label="会员等级名称" prop="gradeName">
+                        <Select v-model="formValidate.grade" clearable style="width:200px">
+                            <Option
+                                v-for="(item,index) in vipList"
+                                :value="item.val"
+                                :key="index"
+                            >{{ item.label }}</Option>
+                        </Select>
+                    </FormItem>
+                </Form>
+            </div>
+            <div slot="footer">
+                <Button @click="handelCancel">取消</Button>
+                <Button type="primary" @click="handelSave">保存</Button>
+            </div>
+        </Modal>
     </div>
 </template>
 
 <script>
-import { apiVipList } from '@/api/vip.js'
+import { apiVipList, apiVipSave } from '@/api/vip.js'
 export default {
     components: {},
     data() {
@@ -59,6 +86,18 @@ export default {
                 phone: '',
                 name: ''
             },
+            formValidate: {
+                grade: ''
+            },
+            ruleValidate: {},
+            vipModel: false,
+            vipList: [
+                { val: 1, label: '普通会员' },
+                { val: 2, label: '银卡会员' },
+                { val: 3, label: '金卡会员' },
+                { val: 4, label: '砖石会员' },
+                { val: 5, label: '黑卡会员' }
+            ],
             columns: [
                 {
                     title: '姓名',
@@ -96,7 +135,7 @@ export default {
                 {
                     title: '操作',
                     slot: 'action',
-                    width:'300'
+                    width: '300'
                 }
             ],
             data: []
@@ -130,6 +169,34 @@ export default {
         // 查看会员详情
         handleShow(data) {
             this.$router.push({ path: 'vip_info', query: { id: data.id } })
+        },
+        // 修改会员等级
+        handleEdit(data) {
+            this.vipModel = true
+            this.formValidate.id = data.id
+            this.formValidate.grade = data.grade
+        },
+        // 取消保存
+        handelCancel() {},
+        // 确认修改
+        handelSave() {
+            console.log(this.formValidate)
+            this.$refs['formValidate'].validate(valid => {
+                if (valid) {
+                    apiVipSave(this.formValidate).then(res => {
+                        try {
+                            if (res.data.code == 0) {
+                                this.$Message.success('保存成功')
+                                this.vipModel = false
+                                this.getVipList()
+                            } else {
+                                this.$Message.error(res.data.message)
+                            }
+                        } catch (error) {}
+                    })
+                } else {
+                }
+            })
         }
     }
 }

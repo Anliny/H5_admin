@@ -84,6 +84,7 @@ export default {
                     const data = res.data
                     console.log(data)
                     commit('setToken', data.data.token)
+                    localStorage.setItem('type', data.data.type)
                     let state = data.data.type == 3 ? ['super_admin', 'admin'] : []
                     commit('setAccess', state)
                     resolve(data)
@@ -116,11 +117,12 @@ export default {
                         console.log(res.data.data)
                         const data = res.data.data
                         // 如果为 data.state = 1 为红娘，2 为管理员,  开发时设置为1
-                        let state = data.state == 2 ? ['super_admin'] : []
+                        let type = localStorage.getItem('type')
+                        let state = type == 3 ? ['super_admin', 'admin'] : []
                         commit('setAvator', data.userAvatar)
                         commit('setUserName', data.name)
                         commit('setUserId', data.user_id)
-                        // commit('setAccess', state)
+                        commit('setAccess', state)
                         commit('setHasGetInfo', true)
                         resolve(data)
                     }).catch(err => {

@@ -17,49 +17,11 @@ export const apiVipInfo = (params) => {
     })
 }
 
-export const getMessage = () => {
+// 保存修改会员信息
+export const apiVipSave = (data) => {
     return axios.request({
-        url: 'message/init',
-        method: 'get'
-    })
-}
-
-export const getContentByMsgId = msg_id => {
-    return axios.request({
-        url: 'message/content',
-        method: 'get',
-        params: {
-            msg_id
-        }
-    })
-}
-
-export const hasRead = msg_id => {
-    return axios.request({
-        url: 'message/has_read',
-        method: 'post',
-        data: {
-            msg_id
-        }
-    })
-}
-
-export const removeReaded = msg_id => {
-    return axios.request({
-        url: 'message/remove_readed',
-        method: 'post',
-        data: {
-            msg_id
-        }
-    })
-}
-
-export const restoreTrash = msg_id => {
-    return axios.request({
-        url: 'message/restore',
-        method: 'post',
-        data: {
-            msg_id
-        }
+        url: 'api/member/save',
+        data: data,
+        method: 'post'
     })
 }
