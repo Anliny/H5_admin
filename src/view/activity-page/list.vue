@@ -52,8 +52,15 @@
                             icon="ios-happy"
                             size="small"
                             ghost
+                            @click="handleChange(item,2)"
                         >确认通过</Button>&nbsp;
-                        <Button type="error" icon="ios-trash-outline" size="small" ghost>删除动态</Button>
+                        <Button
+                            type="error"
+                            icon="ios-trash-outline"
+                            size="small"
+                            ghost
+                            @click="handleMoveActivity(item)"
+                        >删除动态</Button>
                     </div>
                 </div>
 
@@ -87,7 +94,7 @@
 </template>
 
 <script>
-import { apiActivityList } from '@/api/activity.js'
+import { apiActivityList, apiActivitySave } from '@/api/activity.js'
 export default {
     components: {},
     data() {
@@ -107,7 +114,6 @@ export default {
         // 获取列表
         getActivityList() {
             apiActivityList(this.queryData).then(res => {
-                console.log(res)
                 let { current, pages, records, size, total } = res.data.data
                 this.queryData.current = current
                 this.queryData.pages = pages
@@ -125,6 +131,46 @@ export default {
         handleChagePage(index) {
             this.queryData.current = index
             this.getMatchmakerList()
+        },
+        // 审核活动
+        handleChange(data, index) {
+            this.$Modal.warning({
+                title: '提示',
+                content: '确认审核通过该条活动！',
+                onOk: () => {
+                    let info = {
+                        id: data.id,
+                        state: index
+                    }
+                    apiActivitySave(info).then(res => {
+                        try {
+                            console.log(res)
+                            this.$Message.success('保存成功')
+                            this.getActivityList()
+                        } catch (error) {}
+                    })
+                }
+            })
+        },
+        // 删除活动
+        handleMoveActivity(data) {
+            this.$Modal.warning({
+                title: '提示',
+                content: '确认删除该条活动！',
+                onOk: () => {
+                    let info = {
+                        id: data.id,
+                        deleted: true
+                    }
+                    apiActivitySave(info).then(res => {
+                        try {
+                            console.log(res)
+                            this.$Message.success('删除成功')
+                            this.getActivityList()
+                        } catch (error) {}
+                    })
+                }
+            })
         },
         // 列表头像处理
         userAvatar(url) {

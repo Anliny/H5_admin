@@ -8,11 +8,12 @@ export const apiActivityList = (params) => {
         params: params
     })
 }
-// 会员详情
-export const apiVipInfo = (params) => {
+
+// 保存修改活动
+export const apiActivitySave = (data) => {
     return axios.request({
-        url: 'api/member/queryById',
-        params: params,
-        method: 'get'
+        url: 'api/activity/save',
+        method: 'post',
+        data: data
     })
 }
