@@ -35,7 +35,8 @@
                 </template>
                 <template slot-scope="{ row, index }" slot="action">
                     <Button size="small" @click="handleShow(row)">查看详情</Button>&nbsp;
-                    <Button size="small" @click="handleEdit(row)">修改会员等级</Button>
+                    <Button size="small" @click="handleEdit(row)">修改会员等级</Button>&nbsp;
+                    <Button size="small" @click="handleMove(row)">删除</Button>
                 </template>
             </Table>
             <div class="pages">
@@ -180,7 +181,6 @@ export default {
         handelCancel() {},
         // 确认修改
         handelSave() {
-            console.log(this.formValidate)
             this.$refs['formValidate'].validate(valid => {
                 if (valid) {
                     apiVipSave(this.formValidate).then(res => {
@@ -195,6 +195,32 @@ export default {
                         } catch (error) {}
                     })
                 } else {
+                }
+            })
+        },
+        // 删除会员
+        handleMove(data) {
+            console.log(data)
+
+            this.$Modal.warning({
+                title: '提示',
+                content: '确认删除该会员？',
+                onOk: () => {
+                    let info = {
+                        id: data.id,
+                        deleted: true
+                    }
+                    apiVipSave(info).then(res => {
+                        try {
+                            if (res.data.code == 0) {
+                                this.$Message.success('删除成功')
+                                this.vipModel = false
+                                this.getVipList()
+                            } else {
+                                this.$Message.error(res.data.message)
+                            }
+                        } catch (error) {}
+                    })
                 }
             })
         }
