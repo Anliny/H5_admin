@@ -37,12 +37,12 @@
                 </template>
                 <template slot-scope="{ row, index }" slot="action">
                     <Button size="small" @click="handleShow(row)">查看详情</Button>&nbsp;
-                    <Button v-if="row.state != 2" size="small" @click="handleExamine(row)">确认审核</Button>&nbsp;
+                    <Button v-if="row.state != 2" size="small" @click="handleExamine(row,2)">确认审核</Button>&nbsp;
                     <Button
                         v-if="row.state != 3"
                         type="error"
                         size="small"
-                        @click="handleCancelExamine(row)"
+                        @click="handleExamine(row,3)"
                     >取消通过</Button>&nbsp;
                     <Button size="small" @click="handleDelete(row)">删除用户</Button>
                 </template>
@@ -148,10 +148,10 @@ export default {
             this.$router.push({ path: 'matchmaker_info', query: { id: data.id } })
         },
         // 确认审核
-        handleExamine(data) {
+        handleExamine(data, index) {
             let saveData = {
                 id: data.id,
-                state: 2
+                state: index
             }
             apiMatchmakerSave(saveData).then(res => {
                 try {
