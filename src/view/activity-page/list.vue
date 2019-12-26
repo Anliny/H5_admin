@@ -101,7 +101,8 @@ export default {
         return {
             queryData: {
                 addressId: '',
-                title: ''
+                title: '',
+                current: 1
             },
             data: []
         }

@@ -51,6 +51,7 @@
                     <div class="item">现住地址：{{currentAddress}}</div>
                     <div class="item">行业：{{vipInfo.industry}}</div>
                     <div class="item">是否结婚：{{isMarry}}</div>
+                    <div class="item">是否有小孩：{{vipInfo.isChild ? "没有" :"有"}}</div>
                 </div>
             </Col>
             <Col span="8">
@@ -154,7 +155,6 @@ export default {
         getUserInfo() {
             if (!this.id) return
             apiVipInfo({ id: this.id }).then(res => {
-                console.log(res)
                 this.vipInfo = res.data.data
             })
         }

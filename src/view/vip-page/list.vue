@@ -85,7 +85,8 @@ export default {
         return {
             queryData: {
                 phone: '',
-                name: ''
+                name: '',
+                current: ''
             },
             formValidate: {
                 grade: ''
@@ -178,7 +179,9 @@ export default {
             this.formValidate.grade = data.grade
         },
         // 取消保存
-        handelCancel() {},
+        handelCancel() {
+            this.vipModel = false
+        },
         // 确认修改
         handelSave() {
             this.$refs['formValidate'].validate(valid => {
