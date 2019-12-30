@@ -95,6 +95,8 @@
 
 <script>
 import { apiActivityList, apiActivitySave } from '@/api/activity.js'
+import { formatQsData } from '@/libs/tools.js'
+
 export default {
     components: {},
     data() {
@@ -114,7 +116,8 @@ export default {
     methods: {
         // 获取列表
         getActivityList() {
-            apiActivityList(this.queryData).then(res => {
+            let queryData = formatQsData(this.queryData)
+            apiActivityList(queryData).then(res => {
                 let { current, pages, records, size, total } = res.data.data
                 this.queryData.current = current
                 this.queryData.pages = pages

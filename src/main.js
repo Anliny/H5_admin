@@ -17,6 +17,7 @@ import TreeTable from 'tree-table-vue'
 import VOrgTree from 'v-org-tree'
 import 'v-org-tree/dist/v-org-tree.css'
 import 'view-design/dist/styles/iview.css';
+import axios from '@/libs/api.request'
 // 实际打包时应该不引入mock
 /* eslint-disable */
 // if (process.env.NODE_ENV !== 'production') require('@/mock')
@@ -38,6 +39,8 @@ Vue.config.productionTip = false
  * @description 全局注册应用配置
  */
 Vue.prototype.$config = config
+/* 全局配置请求 */
+Vue.prototype.$axios = axios
 /**
  * 注册指令
  */

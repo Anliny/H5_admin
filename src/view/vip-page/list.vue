@@ -79,6 +79,9 @@
 
 <script>
 import { apiVipList, apiVipSave } from '@/api/vip.js'
+import qs from 'qs'
+import { formatQsData } from '@/libs/tools.js'
+
 export default {
     components: {},
     data() {
@@ -86,7 +89,7 @@ export default {
             queryData: {
                 phone: '',
                 name: '',
-                current: ''
+                current: 1
             },
             formValidate: {
                 grade: ''
@@ -149,7 +152,8 @@ export default {
     methods: {
         // 获取列表
         getVipList() {
-            apiVipList(this.queryData).then(res => {
+            let queryData = formatQsData(this.queryData)
+            apiVipList(queryData).then(res => {
                 let { current, pages, records, size, total } = res.data.data
                 this.queryData.current = current
                 this.queryData.pages = pages
