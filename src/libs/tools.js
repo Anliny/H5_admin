@@ -214,10 +214,10 @@ export const objEqual = (obj1, obj2) => {
     else return !keysArr1.some(key => obj1[key] != obj2[key])
 }
 
-
 /**
  *  @param {*} data 对象
  *  @description 过滤列表查询条件对象，如果查询字段为""，则清除该字段，返回新的带有值的对象
+ *  @return {*}
  */
 export const formatQsData = (data) => {
     let qsData = {}
@@ -227,4 +227,20 @@ export const formatQsData = (data) => {
         }
     }
     return qsData
+}
+
+/**
+ * @param {*} date 对象
+ * @description 传入时间对象转换为时间字符串
+ * @return '2019-08-09'
+ */
+export const formatDate = (objDate) => {
+    const d = new Date(objDate)
+    const year = d.getFullYear()
+    const month = getHandledValue(d.getMonth() + 1)
+    const date = getHandledValue(d.getDate())
+    // const hours = getHandledValue(d.getHours())
+    // const minutes = getHandledValue(d.getMinutes())
+    // const second = getHandledValue(d.getSeconds())
+    return `${year}-${month}-${date}`
 }

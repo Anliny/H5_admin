@@ -1,97 +1,131 @@
 <template>
-    <div class="main clearfix">
-        <div class="info-item">
-            <div class="info-item-group">
-                <label class="btn btn-orange" for="uploads">选择图片</label>
-                <input
-                    type="file"
-                    id="uploads"
-                    :value="imgFile"
-                    style="position:absolute; clip:rect(0 0 0 0);"
-                    accept="image/png, image/jpeg, image/gif, image/jpg"
-                    @change="uploadImg($event, 1)"
-                >
-                <input
-                    type="button"
-                    class="oper"
-                    style="height:20px;width:23px;font-size:20px;margin:3px 5px;"
-                    value="+"
-                    title="放大"
-                    @click="changeScale(1)"
-                >
-                <input
-                    type="button"
-                    class="oper"
-                    style="height:20px;width:23px;font-size:20px;margin:3px 5px;"
-                    value="-"
-                    title="缩小"
-                    @click="changeScale(-1)"
-                >
-                <input
-                    type="button"
-                    class="oper"
-                    style="height:20px;width:23px;font-size:20px;margin:3px 5px;"
-                    value="↺"
-                    title="左旋转"
-                    @click="rotateLeft"
-                >
-                <input
-                    type="button"
-                    class="oper"
-                    style="height:20px;width:23px;font-size:20px;margin:3px 5px;"
-                    value="↻"
-                    title="右旋转"
-                    @click="rotateRight"
-                >
-                <input
-                    type="button"
-                    class="oper"
-                    style="height:20px;width:23px;font-size:20px;margin:3px 5px;"
-                    value="↓"
-                    title="下载"
-                    @click="down('blob')"
-                >
-                <input type="button" class="btn btn-blue" value="上传头像" @click="finish('blob')">
-            </div>
+    <div>
+        <div class="main clearfix">
+            <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="120">
+                <Row :gutter="16">
+                    <Col span="12">
+                        <FormItem label="投放位置:" prop="type">
+                            <RadioGroup v-model="formValidate.type">
+                                <Radio label="0">头部</Radio>
+                                <Radio label="1">内容</Radio>
+                            </RadioGroup>
+                        </FormItem>
+                    </Col>
+                    <Col span="12">
+                        <FormItem label="广告名称:" prop="name">
+                            <Input
+                                v-model="formValidate.name"
+                                style="width:200px"
+                                placeholder="请输入广告名称"
+                            ></Input>
+                        </FormItem>
+                    </Col>
+                </Row>
+                <Row :gutter="16">
+                    <Col span="12">
+                        <FormItem label="开始日期:" prop="startTime">
+                            <DatePicker
+                                type="date"
+                                placeholder="请选择开始日期"
+                                style="width:200px;"
+                                v-model="formValidate.startTime"
+                            ></DatePicker>
+                        </FormItem>
+                    </Col>
+                    <Col span="12">
+                        <FormItem label="结束日期:" prop="endTime">
+                            <DatePicker
+                                type="date"
+                                style="width:200px;"
+                                placeholder="请选择结束日期"
+                                v-model="formValidate.endTime"
+                            ></DatePicker>
+                        </FormItem>
+                    </Col>
+                </Row>
+                <Row :gutter="16">
+                    <Col span="12">
+                        <FormItem label="广告外部链接:" prop="url">
+                            <Input
+                                v-model="formValidate.url"
+                                style="width:200px;"
+                                placeholder="请输入图片外部链接地址"
+                            ></Input>
+                        </FormItem>
+                    </Col>
+                    <Col span="12">
+                        <FormItem label="图片地址:" prop="pictureUrl">
+                            <img
+                                style="width:400px;height:145px;"
+                                :src="formValidate.pictureUrl"
+                                alt="广告图片地址"
+                            >
+                        </FormItem>
+                    </Col>
+                </Row>
+                <Row :gutter="16">
+                    <Col span="12">
+                        <Button style="float:right">取消</Button>&nbsp;
+                    </Col>
+                    <Col span="12">
+                        &nbsp;
+                        <Button type="primary" @click="addSave">保存</Button>
+                    </Col>
+                </Row>
+            </Form>
+        </div>
+        <div class="main clearfix">
+            <div class="info-item">
+                <div class="info-item-group">
+                    <label class="btn btn-orange" style="padding:0 10px" for="uploads">选择图片</label>
+                    <input
+                        type="file"
+                        id="uploads"
+                        :value="imgFile"
+                        style="position:absolute; clip:rect(0 0 0 0);"
+                        accept="image/png, image/jpeg, image/gif, image/jpg"
+                        @change="uploadImg($event, 1)"
+                    >
+                    <Button @click="changeScale(1)">放大</Button>&nbsp;
+                    <Button @click="changeScale(-1)">缩小</Button>&nbsp;
+                    <Button @click="rotateLeft">左旋转</Button>&nbsp;
+                    <Button @click="rotateRight">右旋转</Button>&nbsp;
+                    <Button @click="down('blob')">下载</Button>&nbsp;
+                    <Button @click="finish('blob')">上传头像</Button>
+                </div>
 
-            <div class="line">
-                <div class="cropper-content">
-                    <div class="cropper">
-                        <vueCropper
-                            ref="cropper"
-                            :img="option.img"
-                            :outputSize="option.size"
-                            :outputType="option.outputType"
-                            :info="true"
-                            :full="option.full"
-                            :canMove="option.canMove"
-                            :canMoveBox="option.canMoveBox"
-                            :original="option.original"
-                            :autoCrop="option.autoCrop"
-                            :autoCropWidth="option.autoCropWidth"
-                            :autoCropHeight="option.autoCropHeight"
-                            :fixedBox="option.fixedBox"
-                            @realTime="realTime"
-                            @imgLoad="imgLoad"
-                        ></vueCropper>
-                    </div>
-                    <div style="margin-left:20px;">
-                        <div
-                            class="show-preview"
-                            :style="{'width': '150px', 'height':'155px',  'overflow': 'hidden', 'margin': '5px'}"
-                        >
-                            <div :style="previews.div" class="preview">
-                                <img :src="previews.url" :style="previews.img">
+                <div class="line">
+                    <div class="cropper-content">
+                        <div class="cropper">
+                            <vueCropper
+                                ref="cropper"
+                                :img="option.img"
+                                :outputSize="option.size"
+                                :outputType="option.outputType"
+                                :info="true"
+                                :full="option.full"
+                                :canMove="option.canMove"
+                                :canMoveBox="option.canMoveBox"
+                                :original="option.original"
+                                :autoCrop="option.autoCrop"
+                                :autoCropWidth="option.autoCropWidth"
+                                :autoCropHeight="option.autoCropHeight"
+                                :fixedBox="option.fixedBox"
+                                @realTime="realTime"
+                                @imgLoad="imgLoad"
+                            ></vueCropper>
+                        </div>
+                        <div>
+                            <div
+                                class="show-preview"
+                                :style="{'width': '400px','margin-top':'10px','height':'145px',  'overflow': 'hidden'}"
+                            >
+                                <div :style="previews.div" class="preview">
+                                    <img :src="previews.url" :style="previews.img">
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="info-item" style="flex:1;">
-                <div
-                    style="width:120px;height:120px;border-radius:50%;overflow:hidden;margin-left:123px;border:1px solid #ddd"
-                >
-                    <img style="width:120px;height:120px;" :src="headImg" alt="头像">
                 </div>
             </div>
         </div>
@@ -101,6 +135,8 @@
 <script>
 import VueCropper from '@/components/vue-cropper/vue-cropper.vue'
 import { apiUpload } from '@/api/upload.js' // 此处引入上传函数
+import { apiAdvertAdd } from '@/api/advert.js'
+import { formatDate } from '@/libs/tools.js'
 
 export default {
     components: {
@@ -108,6 +144,22 @@ export default {
     },
     data() {
         return {
+            formValidate: {
+                type: '',
+                name: '',
+                pictureUrl: '',
+                endTime: '',
+                startTime: '',
+                url: ''
+            },
+            ruleValidate: {
+                type: [{ required: true, message: '请选择广告位置', trigger: 'change' }],
+                name: [{ required: true, message: '请输入广告名称', trigger: 'blur' }],
+                endTime: [{ required: true, type: 'date', message: '请输入选择结束日期', trigger: 'change' }],
+                startTime: [{ required: true, type: 'date', message: '请输入选择开始日期', trigger: 'change' }],
+                url: [{ required: true, message: '请输入广告外部链接', trigger: 'blur' }],
+                pictureUrl: [{ required: true, message: '请上传广告图片', trigger: 'blur' }]
+            },
             headImg: '',
             //剪切图片上传
             crap: false,
@@ -116,13 +168,13 @@ export default {
                 img: '',
                 outputSize: 1, //剪切后的图片质量（0.1-1）
                 full: false, //输出原图比例截图 props名full
-                outputType: 'png',
+                outputType: 'jpg',
                 canMove: true,
                 original: false,
                 canMoveBox: true,
                 autoCrop: true,
-                autoCropWidth: 150,
-                autoCropHeight: 150,
+                autoCropWidth: 400,
+                autoCropHeight: 145,
                 fixedBox: true
             },
             fileName: '', //本机文件地址
@@ -160,8 +212,24 @@ export default {
                     let img = window.URL.createObjectURL(data)
                     this.model = true
                     this.modelSrc = img
+                    console.log('压缩前：' + data.size / 1024 + 'k')
                     formData.append('file', data, this.fileName)
+                    console.log(data)
+                    let isLt2M = data.size / 1024 / 1024 < 2
+                    if (!isLt2M) {
+                        this.$message.error('上传头像图片大小不能超过 2MB!')
+                        return
+                    }
                     apiUpload(formData).then(res => {
+                        try {
+                            let url = res.data
+                            if (url.code == '-1') {
+                                this.$Message.error('图片上传错误，请从新上传！')
+                            } else {
+                                this.$Message.success(url.message)
+                                this.formValidate.pictureUrl = url.data
+                            }
+                        } catch (error) {}
                         console.log(res)
                     })
                     // this.$http
@@ -250,6 +318,33 @@ export default {
         imgLoad(msg) {
             console.log('imgLoad')
             console.log(msg)
+        },
+        // 保存图片
+        addSave() {
+            // console.log(this.formValidate)
+
+            this.$refs['formValidate'].validate(valid => {
+                if (valid) {
+                    let { type, pictureUrl, url, endTime, startTime } = this.formValidate
+                    let formatEndTime = formatDate(endTime)
+                    let formatStartTime = formatDate(startTime)
+                    // console.log(formatEndTime, formatStartTime)
+                    let data = { type, pictureUrl, url, endTime: formatEndTime, startTime: formatStartTime }
+                    console.log(data)
+                    apiAdvertAdd(data).then(res => {
+                        try {
+                            if (res.data.code == '0') {
+                                this.$Message.success('添加成功!')
+                                this.$router.push({ path: '/advert' })
+                            } else {
+                                this.$Message.error(res.data.message)
+                            }
+                        } catch (error) {}
+                    })
+                } else {
+                    this.$Message.error('Fail!')
+                }
+            })
         }
     }
 }
@@ -258,6 +353,16 @@ export default {
 <style lang="scss">
 @import '../page.scss';
 
+.info-item-group {
+    padding: 20px 0px;
+}
+.oper {
+    height: 20px;
+    width: 20px;
+    font-size: 20px;
+    margin: 3px 5px;
+    line-height: 19px;
+}
 .info {
     width: 720px;
     margin: 0 auto;
@@ -300,8 +405,8 @@ export default {
 
 .cropper-content {
     .cropper {
-        width: 260px;
-        height: 260px;
+        width: 800px;
+        height: 290px;
     }
     .show-preview {
         flex: 1;
@@ -312,7 +417,6 @@ export default {
         -webkit-justify-content: center;
         .preview {
             overflow: hidden;
-            border-radius: 50%;
             border: 1px solid #cccccc;
             background: #cccccc;
             margin-left: 40px;

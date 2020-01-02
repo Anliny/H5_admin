@@ -1,6 +1,7 @@
 import axios from 'axios'
 import store from '@/store'
 // import { Spin } from 'iview'
+// axios.defaults.timeout = 6000;
 const addErrorLog = errorInfo => {
     const { statusText, status, request: { responseURL } } = errorInfo
     let info = {
@@ -20,6 +21,7 @@ class HttpRequest {
     getInsideConfig () {
         const config = {
             baseURL: this.baseUrl,
+            timeout: 6000,
             headers: {
                 //
             }

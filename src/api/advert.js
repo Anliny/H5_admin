@@ -8,7 +8,8 @@ export const apiAdvertList = (params) => {
         params: params
     })
 }
-// 会员详情
+
+// 广告保存
 export const apiAdvertAdd = (data) => {
     return axios.request({
         url: 'api/advertisement/save',

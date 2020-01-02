@@ -27,28 +27,37 @@
             </Form>
         </div>
         <div class="main clearfix">
-            <Table stripe :columns="columns" :data="data">
-                <template slot-scope="{ row, index }" slot="_gender_">
-                    <span v-if="row.gender == 1">男</span>
-                    <span v-else>女</span>
-                </template>
-                <template slot-scope="{ row, index }" slot="action">
-                    <Button size="small" @click="handleShow(row)">查看详情</Button>
-                </template>
-            </Table>
-            <div class="pages">
-                <Page
-                    :total="queryData.total"
-                    :page-size="queryData.size"
-                    @on-change="handleChagePage"
-                />
-            </div>
+            <Row :gutter="16" v-for="(item,index) in tableData" :key="index">
+                <Col span="8">
+                    <img :src="item.pictureUrl" style="width:400px" alt srcset>
+                </Col>
+                <Col span="16">
+                    <Row :gutter="16">
+                        <Col span="12">广告名称：{{item.name}}</Col>
+                        <Col span="12">投放日期：{{item.rawAddTime}}</Col>
+                    </Row>
+                    <Row :gutter="16">
+                        <Col span="12">开始日期：{{item.startTime}}</Col>
+                        <Col span="12">结束日期：{{item.endTime}}</Col>
+                    </Row>
+                    <Row :gutter="16">
+                        <Col span="12">广告位置：{{item.type == 0 ?"头部":'列表'}}</Col>
+                        <Col span="12">广告链接地址：{{item.url}}</Col>
+                    </Row>
+                    <Row :gutter="16">
+                        <Col span="12">状态：{{!item.deleted ? "正常":'删除'}}</Col>
+                        <Col span="12">操作：-</Col>
+                    </Row>
+                </Col>
+            </Row>
         </div>
     </div>
 </template>
 
 <script>
 import { apiAdvertList } from '@/api/advert.js'
+import { formatQsData } from '@/libs/tools.js'
+
 export default {
     components: {},
     data() {
@@ -70,7 +79,6 @@ export default {
             columns: [
                 {
                     title: '缩略图',
-
                     slot: 'pictureUrl'
                 },
                 {
@@ -96,7 +104,7 @@ export default {
                 },
                 {
                     title: '广告位置',
-                    key: 'type'
+                    slot: '_type_'
                 },
                 {
                     title: '状态',
@@ -107,7 +115,7 @@ export default {
                     slot: 'action'
                 }
             ],
-            data: []
+            tableData: []
         }
     },
     created() {
@@ -116,24 +124,22 @@ export default {
     methods: {
         // 获取列表
         getAdvertList() {
-            apiAdvertList(this.queryData).then(res => {
-                // let { current, pages, records, size, total } = res.data.data
-                // this.queryData.current = current
-                // this.queryData.pages = pages
-                // this.queryData.size = size
-                // this.queryData.total = total
-                // this.data = records
+            let queryData = formatQsData(this.queryData)
+            apiAdvertList(queryData).then(res => {
+                console.log(res)
+                let data = res.data.data
+                this.tableData = data
             })
         },
         // 搜索查询
         handleSearch() {
             this.queryData.current = 1
-            this.getVipList()
+            this.getAdvertList()
         },
         // 点击分页
         handleChagePage(index) {
             this.queryData.current = index
-            this.getVipList()
+            this.getAdvertList()
         },
         // 查看会员详情
         handleShow(data) {
