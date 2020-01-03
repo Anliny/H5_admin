@@ -258,7 +258,6 @@ export default {
                     }
                     apiActivitySave(info).then(res => {
                         try {
-                            console.log(res)
                             this.$Message.success('保存成功')
                             this.getActivityList()
                         } catch (error) {}
@@ -278,7 +277,6 @@ export default {
                     }
                     apiActivitySave(info).then(res => {
                         try {
-                            console.log(res)
                             this.$Message.success('删除成功')
                             this.getActivityList()
                         } catch (error) {}
@@ -358,7 +356,6 @@ export default {
 
         // 图片上传的方法
         handleView(name) {
-            console.log(name)
             this.imgName = name
             this.visible = true
         },
@@ -367,7 +364,6 @@ export default {
             this.$refs.upload.fileList.splice(fileList.indexOf(file), 1)
         },
         handleSuccess(res, file) {
-            console.log(res, file)
             file.url = file.response.data
             file.name = file.name
         },
