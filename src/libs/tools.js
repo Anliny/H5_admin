@@ -244,3 +244,19 @@ export const formatDate = (objDate) => {
     // const second = getHandledValue(d.getSeconds())
     return `${year}-${month}-${date}`
 }
+
+/**
+ * @param {*} dateTime 对象
+ * @description 传入时间对象转换为时间字符串
+ * @return '2019-08-09 00:00:00'
+ */
+export const formatDateTime = (objDate) => {
+    const d = new Date(objDate)
+    const year = d.getFullYear()
+    const month = getHandledValue(d.getMonth() + 1)
+    const date = getHandledValue(d.getDate())
+    const hours = getHandledValue(d.getHours())
+    const minutes = getHandledValue(d.getMinutes())
+    const second = getHandledValue(d.getSeconds())
+    return `${year}-${month}-${date} ${hours}:${minutes}:${second}`
+}

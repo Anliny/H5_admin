@@ -18,6 +18,7 @@ export default {
         avatorImgPath: '',
         token: getToken(),
         access: '',
+        type: '',
         hasGetInfo: false,
         unreadCount: 0,
         messageUnreadList: [],
@@ -37,6 +38,9 @@ export default {
         },
         setAccess (state, access) {
             state.access = access
+        },
+        setType (state, type) {
+            state.type = type
         },
         setToken (state, token) {
             state.token = token
@@ -87,6 +91,7 @@ export default {
                     localStorage.setItem('type', data.data.type)
                     let state = data.data.type == 3 ? ['super_admin', 'admin'] : []
                     commit('setAccess', state)
+                    commit('setType', data.data.type)
                     resolve(data)
                 }).catch(err => {
                     reject(err)

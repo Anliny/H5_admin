@@ -325,17 +325,16 @@ export default {
 
             this.$refs['formValidate'].validate(valid => {
                 if (valid) {
-                    let { type, pictureUrl, url, endTime, startTime } = this.formValidate
-                    let formatEndTime = formatDate(endTime)
-                    let formatStartTime = formatDate(startTime)
-                    // console.log(formatEndTime, formatStartTime)
-                    let data = { type, pictureUrl, url, endTime: formatEndTime, startTime: formatStartTime }
+                    let { type, pictureUrl, name, url, endTime, startTime } = this.formValidate
+                    let formatEndTime = formatDate(endTime) + ' 00:00:00'
+                    let formatStartTime = formatDate(startTime) + ' 23:59:59' // console.log(formatEndTime, formatStartTime)
+                    let data = { type, name, pictureUrl, url, endTime: formatEndTime, startTime: formatStartTime }
                     console.log(data)
                     apiAdvertAdd(data).then(res => {
                         try {
                             if (res.data.code == '0') {
                                 this.$Message.success('添加成功!')
-                                this.$router.push({ path: '/advert' })
+                                this.$router.push({ path: '/advert/advert_list' })
                             } else {
                                 this.$Message.error(res.data.message)
                             }

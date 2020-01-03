@@ -25,7 +25,7 @@
                         </FormItem>
                     </Col>
                     <Col span="4" class="formItem">
-                        <Button type="primary" @click="handleSearch">添加活动</Button>&nbsp;
+                        <Button type="primary" @click="addActivity">添加活动</Button>&nbsp;
                         <Button type="primary" @click="handleSearch">搜索</Button>
                     </Col>
                 </Row>
@@ -90,26 +90,136 @@
                 />
             </div>
         </div>
+
+        <!-- 添加会员 -->
+        <Modal v-model="activityModel" :width="800">
+            <div slot="header">
+                <h3>会员等级</h3>
+            </div>
+            <div>
+                <Form
+                    ref="formValidate"
+                    :model="formValidate"
+                    :rules="ruleValidate"
+                    :label-width="120"
+                >
+                    <FormItem label="活动标题" prop="title">
+                        <Input v-model="formValidate.title" placeholder="请输入活动标题"></Input>
+                    </FormItem>
+                    <FormItem label="参与人数" prop="activityNumber">
+                        <InputNumber
+                            :min="1"
+                            style="width:300px"
+                            v-model="formValidate.activityNumber"
+                        ></InputNumber>
+                    </FormItem>
+                    <FormItem label="活动日期" prop="timeList">
+                        <DatePicker
+                            type="datetimerange"
+                            v-model="formValidate.timeList"
+                            placement="bottom-end"
+                            placeholder="请选择开始日期和结束日期"
+                            style="width:300px"
+                        ></DatePicker>
+                    </FormItem>
+                    <FormItem label="活动内容" prop="content">
+                        <Input
+                            v-model="formValidate.content"
+                            type="textarea"
+                            :rows="4"
+                            placeholder="请输入活动内容"
+                        ></Input>
+                    </FormItem>
+                    <FormItem label="图片上传" prop="activityNumber">
+                        <div class="demo-upload-list" v-for="item in uploadList">
+                            <template v-if="item.status === 'finished'">
+                                <img :src="item.url">
+                                <div class="demo-upload-list-cover">
+                                    <Icon
+                                        type="ios-eye-outline"
+                                        @click.native="handleView(item.url)"
+                                    ></Icon>
+                                    <Icon
+                                        type="ios-trash-outline"
+                                        @click.native="handleRemove(item)"
+                                    ></Icon>
+                                </div>
+                            </template>
+                            <template v-else>
+                                <Progress
+                                    v-if="item.showProgress"
+                                    :percent="item.percentage"
+                                    hide-info
+                                ></Progress>
+                            </template>
+                        </div>
+                        <Upload
+                            ref="upload"
+                            :show-upload-list="false"
+                            :default-file-list="defaultList"
+                            :on-success="handleSuccess"
+                            :format="['jpg','jpeg','png']"
+                            :max-size="2048"
+                            :on-format-error="handleFormatError"
+                            :on-exceeded-size="handleMaxSize"
+                            :before-upload="handleBeforeUpload"
+                            multiple
+                            type="drag"
+                            :action="baseUrl"
+                            style="display: inline-block;width:118px;"
+                        >
+                            <div style="width: 118px;height:118px;line-height: 118px;">
+                                <Icon type="ios-camera" size="40"></Icon>
+                            </div>
+                        </Upload>
+                    </FormItem>
+                </Form>
+            </div>
+            <div slot="footer">
+                <Button @click="handelCancel">取消</Button>
+                <Button type="primary" @click="handelSave">保存</Button>
+            </div>
+        </Modal>
+        <Modal title="View Image" v-model="visible">
+            <img :src="imgName" v-if="visible" style="width: 100%">
+        </Modal>
     </div>
 </template>
 
 <script>
 import { apiActivityList, apiActivitySave } from '@/api/activity.js'
-import { formatQsData } from '@/libs/tools.js'
-
+import { formatQsData, formatDateTime } from '@/libs/tools.js'
+import config from '@/config'
+import avatar from '@/assets/admin.jpg'
 export default {
     components: {},
     data() {
         return {
+            baseUrl: config.baseUrl.dev + 'api/common/multiUpload',
+            activityModel: false,
             queryData: {
                 addressId: '',
                 title: '',
                 current: 1
             },
-            data: []
+            data: [],
+            formValidate: {
+                title: '',
+                activityNumber: 0,
+                timeList: [],
+                content: ''
+            },
+            ruleValidate: {},
+
+            defaultList: [],
+            imgName: '',
+            visible: false,
+            uploadList: []
         }
     },
-    computed: {},
+    mounted() {
+        this.uploadList = this.$refs.upload.fileList
+    },
     created() {
         this.getActivityList()
     },
@@ -179,20 +289,148 @@ export default {
         // 列表头像处理
         userAvatar(url) {
             if (url) return url
-            return 'https://gss0.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/wh%3D600%2C800/sign=62d3ca5e6ed9f2d320442ce999dca62b/34fae6cd7b899e511694cfab4ea7d933c8950d72.jpg'
+            return avatar
         },
         // 格式化图片
         pictureUrl(imgList) {
-            console.log(imgList)
             if (imgList.indexOf('[') != -1) {
                 return JSON.parse(imgList)
             } else {
                 return [imgList]
             }
+        },
+        // 添加活动
+        addActivity() {
+            this.formValidate = {
+                title: '',
+                activityNumber: 0,
+                timeList: [],
+                content: ''
+            }
+            this.activityModel = true
+        },
+        // 取消保存活动
+        handelCancel() {
+            this.activityModel = false
+        },
+        // 保存活动
+        handelSave() {
+            let avatorImgPath = this.$store.state.user.avatorImgPath
+            let type = this.$store.state.user.type
+            let userName = this.$store.state.user.userName
+            let userId = this.$store.state.user.userId
+            let { activityNumber, content, title, timeList } = this.formValidate
+
+            let startTime = formatDateTime(timeList[0])
+            let endTime = formatDateTime(timeList[1])
+            let userAvatar = avatorImgPath
+            let name = userName ? userName : 'admin'
+            let state = type == 3 ? 1 : 2
+            let pictureUrl = []
+            this.uploadList.forEach(item => {
+                pictureUrl.push(item.response.data)
+            })
+
+            let info = {
+                userAvatar,
+                title,
+                addressId: '',
+                content,
+                activityNumber,
+                startTime,
+                endTime,
+                name,
+                state,
+                pictureUrl: JSON.stringify(pictureUrl)
+            }
+            apiActivitySave(info).then(res => {
+                try {
+                    if (res.data.code == '0') {
+                        this.$Message.success('活动添加成功！')
+                        this.activityModel = false
+                        this.getActivityList()
+                    } else {
+                        this.$Message.error(res.data.message)
+                    }
+                } catch (error) {}
+            })
+        },
+
+        // 图片上传的方法
+        handleView(name) {
+            console.log(name)
+            this.imgName = name
+            this.visible = true
+        },
+        handleRemove(file) {
+            const fileList = this.$refs.upload.fileList
+            this.$refs.upload.fileList.splice(fileList.indexOf(file), 1)
+        },
+        handleSuccess(res, file) {
+            console.log(res, file)
+            file.url = file.response.data
+            file.name = file.name
+        },
+        handleFormatError(file) {
+            this.$Notice.warning({
+                title: 'The file format is incorrect',
+                desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
+            })
+        },
+        handleMaxSize(file) {
+            this.$Notice.warning({
+                title: 'Exceeding file size limit',
+                desc: 'File  ' + file.name + ' is too large, no more than 2M.'
+            })
+        },
+        handleBeforeUpload() {
+            const check = this.uploadList.length < 5
+            if (!check) {
+                this.$Notice.warning({
+                    title: 'Up to five pictures can be uploaded.'
+                })
+            }
+            return check
         }
     }
 }
 </script>
 <style lang='scss' >
 @import '../page.scss';
+.demo-upload-list {
+    display: inline-block;
+    width: 120px;
+    height: 120px;
+    text-align: center;
+    line-height: 120px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #fff;
+    position: relative;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    margin-right: 4px;
+}
+.demo-upload-list img {
+    width: 100%;
+    height: 100%;
+}
+.demo-upload-list-cover {
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6);
+}
+.demo-upload-list:hover .demo-upload-list-cover {
+    display: block;
+}
+.demo-upload-list-cover i {
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    margin: 0 2px;
+}
 </style>

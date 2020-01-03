@@ -46,7 +46,9 @@
                     </Row>
                     <Row :gutter="16">
                         <Col span="12">状态：{{!item.deleted ? "正常":'删除'}}</Col>
-                        <Col span="12">操作：-</Col>
+                    </Row>
+                    <Row :gutter="16">
+                        <Button type="error" size="small" @click="handleDelete(item.id)">删除</Button>
                     </Row>
                 </Col>
             </Row>
@@ -55,7 +57,7 @@
 </template>
 
 <script>
-import { apiAdvertList } from '@/api/advert.js'
+import { apiAdvertList, apiAdvertAdd } from '@/api/advert.js'
 import { formatQsData } from '@/libs/tools.js'
 
 export default {
@@ -76,45 +78,6 @@ export default {
                 type: '',
                 region: ''
             },
-            columns: [
-                {
-                    title: '缩略图',
-                    slot: 'pictureUrl'
-                },
-                {
-                    title: '广告名称',
-                    key: 'name'
-                },
-
-                {
-                    title: '投放地区',
-                    key: 'region'
-                },
-                {
-                    title: '开始日期',
-                    key: 'startTime'
-                },
-                {
-                    title: '结束日期',
-                    key: 'endTime'
-                },
-                {
-                    title: '广告链接',
-                    key: 'url'
-                },
-                {
-                    title: '广告位置',
-                    slot: '_type_'
-                },
-                {
-                    title: '状态',
-                    slot: 'action'
-                },
-                {
-                    title: '操作',
-                    slot: 'action'
-                }
-            ],
             tableData: []
         }
     },
@@ -126,7 +89,6 @@ export default {
         getAdvertList() {
             let queryData = formatQsData(this.queryData)
             apiAdvertList(queryData).then(res => {
-                console.log(res)
                 let data = res.data.data
                 this.tableData = data
             })
@@ -144,6 +106,30 @@ export default {
         // 查看会员详情
         handleShow(data) {
             this.$router.push({ path: 'vip_info', query: { id: data.id } })
+        },
+        // 删除广告
+        handleDelete(id) {
+            this.$Modal.warning({
+                title: '提示',
+                content: '确认删除该条广告？',
+                onOk: () => {
+                    let info = {
+                        id: id,
+                        deleted: true
+                    }
+
+                    apiAdvertAdd(info).then(res => {
+                        try {
+                            if (res.data.code == '0') {
+                                this.$Message.success('删除成功!')
+                                this.getAdvertList()
+                            } else {
+                                this.$Message.error(res.data.message)
+                            }
+                        } catch (error) {}
+                    })
+                }
+            })
         }
     }
 }
