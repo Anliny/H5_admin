@@ -209,9 +209,11 @@ export default {
         handleMove(data) {
             console.log(data)
 
-            this.$Modal.warning({
+            this.$Modal.confirm({
                 title: '提示',
                 content: '确认删除该会员？',
+                okText: '确定',
+                cancelText: '取消',
                 onOk: () => {
                     let info = {
                         id: data.id,

@@ -40,12 +40,13 @@ module.exports = {
     //   devServer: {
     //     proxy: 'localhost:3000'
     //   ws: true,
-
+    //   target: 'http://106.13.70.95:888/apis',
+    // 
     //   }
     devServer: {
         proxy: {
             '/api': {
-                target: 'http://106.13.70.95:888/apis',
+                target: 'http://api.qs13.cn/apis',
                 changeOrigin: true,
                 ws: false,
                 pathRewrite: {

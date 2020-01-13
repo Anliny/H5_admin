@@ -28,7 +28,9 @@ class HttpRequest {
         }
         // 加一个url判断，非login页面，就从user.token中取token，保存到headers['Authorization']
         if (this.baseUrl !== 'login') {
-            config.headers['Authorization'] = store.state.user.token
+            if (store.state.user.token) {
+                config.headers['Authorization'] = store.state.user.token
+            }
         }
         return config
     }

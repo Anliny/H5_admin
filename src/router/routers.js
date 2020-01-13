@@ -226,14 +226,6 @@ export default [
                     title: '活动列表'
                 },
                 component: () => import('@/view/activity-page/list.vue')
-            }, {
-                path: 'activity_add',
-                name: 'activity_add',
-                meta: {
-                    icon: 'ios-aperture',
-                    title: '添加活动'
-                },
-                component: () => import('@/view/activity-page/add.vue')
             }
         ]
     },
