@@ -86,13 +86,16 @@ export default {
                     password
                 }).then(res => {
                     const data = res.data
-                    console.log(data)
-                    commit('setToken', data.data.token)
-                    localStorage.setItem('type', data.data.type)
-                    let state = data.data.type == 3 ? ['super_admin', 'admin'] : []
-                    commit('setAccess', state)
-                    commit('setType', data.data.type)
+                    if (data.code == 0) {
+                        commit('setToken', data.data.token)
+                        localStorage.setItem('type', data.data.type)
+                        let state = data.data.type == 3 ? ['super_admin', 'admin'] : []
+                        commit('setAccess', state)
+                        commit('setType', data.data.type)
+                    }
                     resolve(data)
+
+
                 }).catch(err => {
                     reject(err)
                 })
